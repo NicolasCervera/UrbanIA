@@ -1,18 +1,18 @@
-import { Component, ViewChild } from '@angular/core'; // Importamos ViewChild
+import { Component, ViewChild } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { StyleClassModule } from 'primeng/styleclass';
 import { AppConfigurator } from './app.configurator';
 import { LayoutService } from '../service/layout.service';
-import { Menu, MenuModule } from 'primeng/menu'; // Importamos Menu y MenuModule
+import { Menu, MenuModule } from 'primeng/menu';
 
 @Component({
     selector: 'app-topbar',
     standalone: true,
-    // AGREGAMOS MenuModule AQUÍ
     imports: [RouterModule, CommonModule, StyleClassModule, AppConfigurator, MenuModule],
-    template: ` <div class="layout-topbar">
+    template: `
+    <div class="layout-topbar">
         <div class="layout-topbar-logo-container">
             <button class="layout-menu-button layout-topbar-action" (click)="layoutService.onMenuToggle()">
                 <i class="pi pi-bars"></i>
@@ -43,7 +43,13 @@ import { Menu, MenuModule } from 'primeng/menu'; // Importamos Menu y MenuModule
                 </div>
             </div>
 
-            <button class="layout-topbar-menu-button layout-topbar-action" pStyleClass="@next" enterFromClass="hidden" enterActiveClass="animate-scalein" leaveToClass="hidden" leaveActiveClass="animate-fadeout" [hideOnOutsideClick]="true">
+            <button class="layout-topbar-menu-button layout-topbar-action" 
+                pStyleClass="@next" 
+                enterFromClass="hidden" 
+                enterActiveClass="animate-scalein" 
+                leaveToClass="hidden" 
+                leaveActiveClass="animate-fadeout" 
+                [hideOnOutsideClick]="true">
                 <i class="pi pi-ellipsis-v"></i>
             </button>
 
@@ -63,25 +69,34 @@ import { Menu, MenuModule } from 'primeng/menu'; // Importamos Menu y MenuModule
                         <span>Profile</span>
                     </button>
 
-                    <p-menu #profileMenu [model]="profileMenuItems" [popup]="true"></p-menu>
+                    <p-menu #profileMenu 
+                        [model]="profileMenuItems" 
+                        [popup]="true" 
+                        appendTo="body"
+                        styleClass="profile-menu-custom">
+                    </p-menu>
                 </div>
             </div>
         </div>
-    </div>`
+    </div>`,
+    styles: [`
+        /* Ajuste para asegurar que el menú no se salga de la pantalla en móviles */
+        :host ::ng-deep .profile-menu-custom {
+            right: 10px !important;
+            left: auto !important;
+            min-width: 180px;
+        }
+    `]
 })
 export class AppTopbar {
-    // VINCULAMOS EL #profileMenu DEL TEMPLATE
     @ViewChild('profileMenu') profileMenu!: Menu;
 
-    profileMenuItems = [
-        // RUTEAMOS AL LOGIN EN INICIO Y CERRAR SESIÓN
+    profileMenuItems: MenuItem[] = [
         { label: 'Mi Perfil', icon: 'pi pi-user', routerLink: ['/auth/login'] },
         { label: 'Ajustes', icon: 'pi pi-cog' },
         { separator: true },
         { label: 'Cerrar Sesión', icon: 'pi pi-sign-out', routerLink: ['/auth/login'] }
     ];
-
-    items!: MenuItem[];
 
     constructor(public layoutService: LayoutService) { }
 
