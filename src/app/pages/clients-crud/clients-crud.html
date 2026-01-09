@@ -1,43 +1,43 @@
 <p-toast></p-toast>
 
 <div class="card p-5 shadow-2 border-round-xl">
-    <div class="mb-8 border-bottom-1 surface-border pb-3">
+    <div class="mb-5 border-bottom-1 surface-border pb-3">
         <h5 class="text-2xl font-bold m-0 text-900">Gestión de Clientes</h5>
     </div>
 
     <form [formGroup]="clientForm" (ngSubmit)="saveClient()">
 
-        <div class="flex align-items-center gap-3 mb-3">
-            <label class="font-semibold text-lg text-900" style="width: 120px; min-width: 120px;">Nombre</label>
+        <div class="flex align-items-center gap-2 mb-3">
+            <label class="font-semibold text-lg text-900" style="width: 110px; min-width: 110px;">Nombre</label>
             <div class="flex-1">
                 <input pInputText formControlName="nombre" class="w-full" placeholder="Nombre completo" />
             </div>
         </div>
 
-        <div class="flex align-items-center gap-3 mb-3">
-            <label class="font-semibold text-lg text-900" style="width: 120px; min-width: 120px;">Teléfono</label>
+        <div class="flex align-items-center gap-2 mb-3">
+            <label class="font-semibold text-lg text-900" style="width: 110px; min-width: 110px;">Teléfono</label>
             <div class="flex-1">
                 <input pInputText formControlName="telefono" class="w-full" placeholder="+54 9 11..." />
             </div>
         </div>
 
-        <div class="flex align-items-center gap-3 mb-3">
-            <label class="font-semibold text-lg text-900" style="width: 120px; min-width: 120px;">Tipo</label>
+        <div class="flex align-items-center gap-2 mb-3">
+            <label class="font-semibold text-lg text-900" style="width: 110px; min-width: 110px;">Tipo</label>
             <div class="flex-1">
                 <p-select [options]="clientTypes" formControlName="tipo" optionLabel="label" optionValue="value"
                     styleClass="w-full" [style]="{'width':'100%'}"></p-select>
             </div>
         </div>
 
-        <div class="flex align-items-center gap-3 mb-3">
-            <label class="font-semibold text-lg text-900" style="width: 120px; min-width: 120px;">Email</label>
+        <div class="flex align-items-center gap-2 mb-3">
+            <label class="font-semibold text-lg text-900" style="width: 110px; min-width: 110px;">Email</label>
             <div class="flex-1">
                 <input pInputText formControlName="email" class="w-full" placeholder="ejemplo@correo.com" />
             </div>
         </div>
 
-        <div class="flex align-items-start gap-3 mb-4">
-            <label class="font-semibold text-lg text-900 pt-2" style="width: 120px; min-width: 120px;">Notas</label>
+        <div class="flex align-items-start gap-2 mb-4">
+            <label class="font-semibold text-lg text-900 pt-2" style="width: 110px; min-width: 110px;">Notas</label>
             <div class="flex-1">
                 <textarea pTextarea formControlName="notas" rows="4" class="w-full" style="resize: none;"
                     placeholder="Requerimientos específicos..."></textarea>

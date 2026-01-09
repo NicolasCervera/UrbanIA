@@ -6,6 +6,7 @@ import { Landing } from './app/pages/landing/landing';
 import { Notfound } from './app/pages/notfound/notfound';
 import { PropertiesCrudComponent } from '@/pages/properties-crud/properties-crud';
 import { ClientsCrudComponent } from '@/pages/clients-crud/clients-crud';
+import { ContractsCrudComponent } from '@/pages/contracts-crud/contracts-crud';
 
 export const appRoutes: Routes = [
     {
@@ -17,6 +18,7 @@ export const appRoutes: Routes = [
             { path: 'documentation', component: Documentation },
             { path: 'propiedades', component: PropertiesCrudComponent },
             { path: 'clientes', component: ClientsCrudComponent },
+            { path: 'contratos', component: ContractsCrudComponent },
             { path: 'pages', loadChildren: () => import('./app/pages/pages.routes') }
         ]
     },
