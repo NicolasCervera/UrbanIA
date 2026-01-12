@@ -5,9 +5,9 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } 
 // PrimeNG Modules
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { DatePickerModule } from 'primeng/datepicker'; // Reemplaza a Calendar
-import { SelectModule } from 'primeng/select';         // Reemplaza a Dropdown
-import { TextareaModule } from 'primeng/textarea';     // Reemplaza a InputTextarea
+import { DatePickerModule } from 'primeng/datepicker';
+import { SelectModule } from 'primeng/select';
+import { TextareaModule } from 'primeng/textarea';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
@@ -21,7 +21,7 @@ import { MessageService } from 'primeng/api';
   providers: [MessageService],
   imports: [
     CommonModule, FormsModule, ReactiveFormsModule,
-    DatePickerModule, InputNumberModule, SelectModule, // Nombres actualizados
+    DatePickerModule, InputNumberModule, SelectModule,
     InputTextModule, TextareaModule, FileUploadModule,
     ButtonModule, TableModule, TagModule, ToastModule
   ],
@@ -46,16 +46,25 @@ export class PropertiesCrudComponent implements OnInit {
       detalle: ['', Validators.required],
       fotos: [[]]
     });
+
+    // DATOS DE PRUEBA (Para testear el buscador)
+    this.properties = [
+      { id: 1, fecha: new Date('2024-01-15'), valor: 120000, tipo: 'Venta', ubicacion: 'Calle Falsa 123', detalle: 'Casa linda con patio' },
+      { id: 2, fecha: new Date('2024-02-20'), valor: 450, tipo: 'Alquiler', ubicacion: 'Av. Corrientes 500', detalle: 'Monoambiente centrico' },
+      { id: 3, fecha: new Date('2024-03-10'), valor: 85000, tipo: 'Venta', ubicacion: 'Zona Norte', detalle: 'Departamento 2 ambientes a estrenar' }
+    ];
   }
 
   onUpload(event: any) {
-    // En un caso real, aquí subirías el archivo al servidor
     this.messageService.add({ severity: 'info', summary: 'Foto cargada', detail: 'Imagen lista' });
   }
 
   saveProperty() {
     if (this.propertyForm.valid) {
-      this.properties.push({ ...this.propertyForm.value, id: Date.now() });
+      // Usamos el spread operator para crear una nueva referencia del array y que la tabla detecte el cambio
+      const newProperty = { ...this.propertyForm.value, id: Date.now() };
+      this.properties = [newProperty, ...this.properties];
+
       this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Propiedad guardada correctamente' });
       this.propertyForm.reset({ fecha: new Date(), tipo: 'Venta' });
     }
@@ -63,5 +72,6 @@ export class PropertiesCrudComponent implements OnInit {
 
   deleteProperty(id: number) {
     this.properties = this.properties.filter(p => p.id !== id);
+    this.messageService.add({ severity: 'warn', summary: 'Eliminado', detail: 'Propiedad eliminada' });
   }
 }
