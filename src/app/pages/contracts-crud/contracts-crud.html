@@ -7,72 +7,73 @@
 
     <form [formGroup]="contractForm" (ngSubmit)="saveContract()">
 
-        <div class="flex align-items-center gap-2 mb-3">
-            <label class="font-semibold text-lg text-900" style="width: 110px; min-width: 110px;">Locatario</label>
+        <div class="flex flex-column md:flex-row align-items-stretch md:align-items-center gap-3 mb-3">
+            <label class="font-semibold text-lg text-900 md:w-11rem" style="min-width: 110px;">Locatario</label>
             <div class="flex-1">
                 <input pInputText formControlName="locatario" class="w-full" placeholder="Nombre completo" />
             </div>
         </div>
 
-        <div class="flex align-items-center gap-2 mb-3">
-            <label class="font-semibold text-lg text-900" style="width: 110px; min-width: 110px;">Propiedad</label>
+        <div class="flex flex-column md:flex-row align-items-stretch md:align-items-center gap-3 mb-3">
+            <label class="font-semibold text-lg text-900 md:w-11rem" style="min-width: 110px;">Propiedad</label>
             <div class="flex-1">
                 <input pInputText formControlName="propiedad" class="w-full" placeholder="Ej: Depto 4B - Torre 1" />
             </div>
         </div>
 
-        <div class="flex align-items-center gap-2 mb-3">
-            <label class="font-semibold text-lg text-900" style="width: 110px; min-width: 110px;">Operación</label>
+        <div class="flex flex-column md:flex-row align-items-stretch md:align-items-center gap-3 mb-3">
+            <label class="font-semibold text-lg text-900 md:w-11rem" style="min-width: 110px;">Operación</label>
             <div class="flex-1">
                 <p-select [options]="tiposContrato" formControlName="tipo" placeholder="Seleccionar" styleClass="w-full"
                     [style]="{'width':'100%'}"></p-select>
             </div>
         </div>
 
-        <div class="flex align-items-center gap-2 mb-3">
-            <label class="font-semibold text-lg text-900" style="width: 110px; min-width: 110px;">Fecha Inicio</label>
+        <div class="flex flex-column md:flex-row align-items-stretch md:align-items-center gap-3 mb-3">
+            <label class="font-semibold text-lg text-900 md:w-11rem" style="min-width: 110px;">Fecha Inicio</label>
             <div class="flex-1">
                 <p-datepicker formControlName="fechaInicio" dateFormat="dd/mm/yy" [showIcon]="true" styleClass="w-full"
                     [inputStyle]="{'width':'100%'}"></p-datepicker>
             </div>
         </div>
 
-        <div class="flex align-items-center gap-2 mb-3">
-            <label class="font-semibold text-lg text-900" style="width: 110px; min-width: 110px;">Vencimiento</label>
+        <div class="flex flex-column md:flex-row align-items-stretch md:align-items-center gap-3 mb-3">
+            <label class="font-semibold text-lg text-900 md:w-11rem" style="min-width: 110px;">Vencimiento</label>
             <div class="flex-1">
                 <p-datepicker formControlName="fechaVencimiento" dateFormat="dd/mm/yy" [showIcon]="true"
                     styleClass="w-full" [inputStyle]="{'width':'100%'}"></p-datepicker>
             </div>
         </div>
 
-        <div class="flex align-items-center gap-2 mb-3">
-            <label class="font-semibold text-lg text-900" style="width: 110px; min-width: 110px;">Monto Inicial</label>
+        <div class="flex flex-column md:flex-row align-items-stretch md:align-items-center gap-3 mb-3">
+            <label class="font-semibold text-lg text-900 md:w-11rem" style="min-width: 110px;">Monto Inicial</label>
             <div class="flex-1">
                 <p-inputNumber formControlName="monto" mode="currency" currency="ARS" locale="es-AR" styleClass="w-full"
                     [inputStyle]="{'width':'100%'}"></p-inputNumber>
             </div>
         </div>
 
-        <div class="flex align-items-center gap-2 mb-3">
-            <label class="font-semibold text-lg text-900" style="width: 110px; min-width: 110px;">Ajuste cada</label>
+        <div class="flex flex-column md:flex-row align-items-stretch md:align-items-center gap-3 mb-3">
+            <label class="font-semibold text-lg text-900 md:w-11rem" style="min-width: 110px;">Ajuste cada</label>
             <div class="flex-1">
                 <p-select [options]="frecuencias" formControlName="frecuenciaAumento" placeholder="Seleccionar periodo"
                     styleClass="w-full" [style]="{'width':'100%'}"></p-select>
             </div>
         </div>
 
-        <div class="flex align-items-center gap-2 mb-4">
-            <label class="font-semibold text-lg text-900" style="width: 110px; min-width: 110px;">Índice</label>
+        <div class="flex flex-column md:flex-row align-items-stretch md:align-items-center gap-3 mb-4">
+            <label class="font-semibold text-lg text-900 md:w-11rem" style="min-width: 110px;">Índice</label>
             <div class="flex-1">
                 <p-select [options]="indices" formControlName="tipoAumento" placeholder="Seleccionar índice"
                     styleClass="w-full" [style]="{'width':'100%'}"></p-select>
             </div>
         </div>
 
-        <div class="flex justify-content-end align-items-center gap-3 mt-5" style="width: 100%;">
-            <button pButton type="button" label="Cancelar" class="p-button-outlined p-button-secondary px-4"
+        <div class="flex flex-column-reverse md:flex-row justify-content-end align-items-center gap-3 mt-5">
+            <button pButton type="button" label="Cancelar"
+                class="p-button-outlined p-button-secondary w-full md:w-auto px-4"
                 (click)="contractForm.reset()"></button>
-            <button pButton type="submit" label="Guardar Contrato" class="p-button-primary px-4"
+            <button pButton type="submit" label="Guardar Contrato" class="p-button-primary w-full md:w-auto px-4"
                 [disabled]="contractForm.invalid"></button>
         </div>
 
@@ -81,24 +82,20 @@
 
 <div class="card p-4 mt-4 shadow-2 border-round-xl">
 
-    <div class="flex flex-column lg:flex-row justify-content-between align-items-center mb-4 gap-3">
+    <div class="flex flex-column xl:flex-row justify-content-between align-items-center mb-4 gap-3">
 
-        <h5 class="text-2xl font-bold m-0 text-900 w-full lg:w-auto text-center lg:text-left">
-            Legajos Digitales
-        </h5>
+        <h5 class="text-2xl font-bold m-0 text-900 w-full xl:w-auto text-center xl:text-left">Legajos Digitales</h5>
 
-        <div class="flex flex-column md:flex-row gap-3 w-full lg:w-auto">
+        <div class="flex flex-column md:flex-row gap-3 w-full xl:w-auto">
 
             <p-datepicker [(ngModel)]="fechaDesde" placeholder="Desde" dateFormat="dd/mm/yy" [showIcon]="true"
-                styleClass="w-full md:w-11rem" [inputStyle]="{'width':'100%'}">
-            </p-datepicker>
+                styleClass="w-full md:w-11rem" [inputStyle]="{'width':'100%'}"></p-datepicker>
 
             <p-datepicker [(ngModel)]="fechaHasta" placeholder="Hasta" dateFormat="dd/mm/yy" [showIcon]="true"
-                styleClass="w-full md:w-11rem" [inputStyle]="{'width':'100%'}">
-            </p-datepicker>
+                styleClass="w-full md:w-11rem" [inputStyle]="{'width':'100%'}"></p-datepicker>
 
             <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
-                placeholder="Buscar..." class="w-full md:w-15rem" />
+                placeholder="Buscar..." class="w-full md:w-20rem" />
         </div>
     </div>
 
@@ -159,7 +156,7 @@
 
     <div class="grid w-full m-0">
 
-        <div class="col-12 md:col-6 p-0 pr-4 md:border-right-1 surface-border mb-4 md:mb-0">
+        <div class="col-12 md:col-6 p-0 pr-0 md:pr-4 md:border-right-1 surface-border mb-4 md:mb-0">
             <h3 class="text-xl font-bold mb-3 text-900 text-left">Historial de Pagos</h3>
 
             <p-timeline [value]="selectedContract.historialAumentos" align="left" styleClass="w-full">
@@ -179,7 +176,7 @@
             <div class="w-full text-left">
                 <div class="mb-3 text-left">
                     <p-fileUpload name="docs[]" [multiple]="true" accept="image/*,application/pdf" maxFileSize="5000000"
-                        mode="basic" chooseLabel="Subir Documentación" uploadLabel="Guardar">
+                        mode="basic" chooseLabel="Subir Documentación" uploadLabel="Guardar" styleClass="w-full">
                     </p-fileUpload>
                 </div>
 
