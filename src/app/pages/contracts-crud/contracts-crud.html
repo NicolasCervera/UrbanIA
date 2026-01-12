@@ -81,20 +81,24 @@
 
 <div class="card p-4 mt-4 shadow-2 border-round-xl">
 
-    <div class="flex flex-column xl:flex-row justify-content-between align-items-center mb-4 gap-3">
+    <div class="flex flex-column lg:flex-row justify-content-between align-items-center mb-4 gap-3">
 
-        <h5 class="text-2xl font-bold m-0 text-900 w-full xl:w-auto text-center xl:text-left">Legajos Digitales</h5>
+        <h5 class="text-2xl font-bold m-0 text-900 w-full lg:w-auto text-center lg:text-left">
+            Legajos Digitales
+        </h5>
 
-        <div class="flex flex-column md:flex-row gap-2 w-full xl:w-auto">
+        <div class="flex flex-column md:flex-row gap-3 w-full lg:w-auto">
 
             <p-datepicker [(ngModel)]="fechaDesde" placeholder="Desde" dateFormat="dd/mm/yy" [showIcon]="true"
-                styleClass="w-full md:w-12rem" [inputStyle]="{'width':'100%'}"></p-datepicker>
+                styleClass="w-full md:w-11rem" [inputStyle]="{'width':'100%'}">
+            </p-datepicker>
 
             <p-datepicker [(ngModel)]="fechaHasta" placeholder="Hasta" dateFormat="dd/mm/yy" [showIcon]="true"
-                styleClass="w-full md:w-12rem" [inputStyle]="{'width':'100%'}"></p-datepicker>
+                styleClass="w-full md:w-11rem" [inputStyle]="{'width':'100%'}">
+            </p-datepicker>
 
             <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
-                placeholder="Buscar..." class="w-full md:w-20rem" />
+                placeholder="Buscar..." class="w-full md:w-15rem" />
         </div>
     </div>
 
