@@ -6,6 +6,7 @@
     </div>
 
     <form [formGroup]="contractForm" (ngSubmit)="saveContract()">
+
         <div class="flex flex-column md:flex-row align-items-stretch md:align-items-center gap-3 mb-3">
             <label class="font-semibold text-lg text-900 md:w-11rem" style="min-width: 110px;">Locatario</label>
             <div class="flex-1">
@@ -55,7 +56,7 @@
         <div class="flex flex-column md:flex-row align-items-stretch md:align-items-center gap-3 mb-3">
             <label class="font-semibold text-lg text-900 md:w-11rem" style="min-width: 110px;">Ajuste cada</label>
             <div class="flex-1">
-                <p-select [options]="frecuencias" formControlName="frecuenciaAumento" placeholder="Seleccionar periodo"
+                <p-select [options]="frecuencias" formControlName="frecuenciaAumento" placeholder="Seleccionar"
                     styleClass="w-full" [style]="{'width':'100%'}"></p-select>
             </div>
         </div>
@@ -63,7 +64,7 @@
         <div class="flex flex-column md:flex-row align-items-stretch md:align-items-center gap-3 mb-4">
             <label class="font-semibold text-lg text-900 md:w-11rem" style="min-width: 110px;">Índice</label>
             <div class="flex-1">
-                <p-select [options]="indices" formControlName="tipoAumento" placeholder="Seleccionar índice"
+                <p-select [options]="indices" formControlName="tipoAumento" placeholder="Seleccionar"
                     styleClass="w-full" [style]="{'width':'100%'}"></p-select>
             </div>
         </div>
@@ -75,31 +76,24 @@
             <button pButton type="submit" label="Guardar Contrato" class="p-button-primary w-full md:w-auto px-4"
                 [disabled]="contractForm.invalid"></button>
         </div>
+
     </form>
 </div>
 
 <div class="card p-4 mt-4 shadow-2 border-round-xl">
 
-    <div class="flex flex-column xl:flex-row justify-content-between align-items-center mb-4 gap-3">
+    <div class="flex flex-column md:flex-row justify-content-between align-items-center mb-4 gap-3">
 
-        <h5 class="text-2xl font-bold m-0 text-900 w-full xl:w-auto text-left">Legajos Digitales</h5>
+        <h5 class="text-2xl font-bold m-0 text-900 w-full md:w-auto text-left">Legajos Digitales</h5>
 
-        <div class="flex flex-column md:flex-row gap-3 w-full xl:w-auto">
-
-            <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
-                placeholder="Buscar..." class="w-full md:w-20rem" />
-
-            <p-datepicker [(ngModel)]="fechaDesde" placeholder="Desde" dateFormat="dd/mm/yy" [showIcon]="true"
-                styleClass="w-full md:w-11rem" [inputStyle]="{'width':'100%'}"></p-datepicker>
-
-            <p-datepicker [(ngModel)]="fechaHasta" placeholder="Hasta" dateFormat="dd/mm/yy" [showIcon]="true"
-                styleClass="w-full md:w-11rem" [inputStyle]="{'width':'100%'}"></p-datepicker>
-
-        </div>
+        <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+            placeholder="Buscar nombre, propiedad..." class="w-full md:w-20rem" />
     </div>
 
-    <p-table #dt [value]="contracts" [rows]="10" [paginator]="true" [globalFilterFields]="['locatario', 'propiedad']"
-        responsiveLayout="scroll" styleClass="p-datatable-gridlines">
+    <p-table #dt [value]="contracts" [rows]="10" [paginator]="true"
+        [globalFilterFields]="['locatario', 'propiedad', 'tipoAumento', 'fechaVencimiento']" responsiveLayout="scroll"
+        styleClass="p-datatable-gridlines">
+
         <ng-template pTemplate="header">
             <tr>
                 <th style="width: 10%">Estado</th>
