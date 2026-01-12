@@ -7,6 +7,7 @@ import { Notfound } from './app/pages/notfound/notfound';
 import { PropertiesCrudComponent } from '@/pages/properties-crud/properties-crud';
 import { ClientsCrudComponent } from '@/pages/clients-crud/clients-crud';
 import { ContractsCrudComponent } from '@/pages/contracts-crud/contracts-crud';
+import { PaymentsCrud } from '@/pages/payments-crud/payments-crud';
 
 export const appRoutes: Routes = [
     {
@@ -19,6 +20,7 @@ export const appRoutes: Routes = [
             { path: 'propiedades', component: PropertiesCrudComponent },
             { path: 'clientes', component: ClientsCrudComponent },
             { path: 'contratos', component: ContractsCrudComponent },
+            { path: 'pagos', component: PaymentsCrud },
             { path: 'pages', loadChildren: () => import('./app/pages/pages.routes') }
         ]
     },
