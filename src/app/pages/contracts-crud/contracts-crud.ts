@@ -1,173 +1,221 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 
-// PrimeNG v18
+// --- PRIMENG 18+ IMPORTS ---
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
-import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-import { SelectModule } from 'primeng/select';
-import { DatePickerModule } from 'primeng/datepicker';
+import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { FileUploadModule } from 'primeng/fileupload';
+import { SelectModule } from 'primeng/select';          // Reemplazo de Dropdown
+import { DatePickerModule } from 'primeng/datepicker';  // Reemplazo de Calendar
 import { ToastModule } from 'primeng/toast';
+import { FileUploadModule } from 'primeng/fileupload';
 import { TimelineModule } from 'primeng/timeline';
+import { TooltipModule } from 'primeng/tooltip';
 import { MessageService } from 'primeng/api';
-import { Contract } from './contract.model';
+
+// Interfaz simple para el contrato
+export interface Contract {
+  id: number;
+  locatario: string;
+  propiedad: string;
+  tipo: string;
+  fechaInicio: Date;
+  fechaVencimiento: Date;
+  monto: number;
+  frecuenciaAumento: string;
+  tipoAumento: string;
+  estado: string;
+  documentos: any[];
+  historialAumentos: any[];
+}
 
 @Component({
   selector: 'app-contracts-crud',
   standalone: true,
   imports: [
-    CommonModule, FormsModule, ReactiveFormsModule,
-    TableModule, TagModule, InputTextModule, ButtonModule,
-    SelectModule, DatePickerModule, InputNumberModule,
-    FileUploadModule, ToastModule, TimelineModule
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    TableModule,
+    TagModule,
+    ButtonModule,
+    InputTextModule,
+    InputNumberModule,
+    SelectModule,
+    DatePickerModule,
+    ToastModule,
+    FileUploadModule,
+    TimelineModule,
+    TooltipModule
   ],
+  providers: [MessageService],
   templateUrl: './contracts-crud.html',
-  providers: [MessageService]
+  styleUrls: ['./contracts-crud.scss']
 })
 export class ContractsCrudComponent implements OnInit {
-  contractForm!: FormGroup;
+
+  contractForm: FormGroup;
   contracts: Contract[] = [];
-  selectedContract: Contract | null = null;
+  selectedContract: Contract | null = null; // Para el Legajo Digital
 
-  docPreview: SafeResourceUrl | null = null;
-  docType: 'PDF' | 'IMG' | null = null;
+  // Variables para los filtros de fecha (NUEVO)
+  fechaDesde: Date | null = null;
+  fechaHasta: Date | null = null;
 
+  // Opciones para Selects
   tiposContrato = [
-    { label: 'Alquiler', value: 'Alquiler' },
-    { label: 'Venta', value: 'Venta' }
+    { label: 'Vivienda', value: 'Vivienda' },
+    { label: 'Comercial', value: 'Comercial' },
+    { label: 'Temporario', value: 'Temporario' }
   ];
 
-  // NUEVAS OPCIONES PARA EL AJUSTE
   frecuencias = [
-    { label: 'Mensual', value: '1 Mes' },
-    { label: 'Trimestral', value: '3 Meses' },
-    { label: 'Semestral', value: '6 Meses' },
+    { label: 'Mensual', value: 'Mensual' },
+    { label: 'Trimestral', value: 'Trimestral' },
+    { label: 'Semestral', value: 'Semestral' },
     { label: 'Anual', value: 'Anual' }
   ];
 
   indices = [
-    { label: 'ICL (Ley Alquileres)', value: 'ICL' },
-    { label: 'IPC (Inflación)', value: 'IPC' },
+    { label: 'IPC (Indice Precios Consumidor)', value: 'IPC' },
+    { label: 'ICL (Indice Contratos Locación)', value: 'ICL' },
     { label: 'Casa Propia', value: 'Casa Propia' },
     { label: 'Fijo / Pactado', value: 'Fijo' }
   ];
 
-  constructor(
-    private fb: FormBuilder,
-    private messageService: MessageService,
-    private sanitizer: DomSanitizer
-  ) { }
-
-  ngOnInit() {
-    this.initForm();
-
-    // Datos de prueba actualizados
-    this.contracts = [{
-      id: 1,
-      locatario: 'Mariano Martínez',
-      propiedad: 'Depto 4B - Av. Libertador',
-      tipo: 'Alquiler',
-      fechaInicio: new Date(2024, 0, 1),
-      fechaVencimiento: new Date(2026, 2, 10),
-      monto: 500000,
-      // Nuevos campos con datos de ejemplo
-      frecuenciaAumento: '3 Meses',
-      tipoAumento: 'IPC',
-      documentos: [],
-      historialAumentos: [
-        { fecha: new Date(2024, 0, 1), monto: 300000 },
-        { fecha: new Date(2025, 0, 1), monto: 500000 }
-      ]
-    } as any]; // as any para que no chille si falta actualizar el modelo strict
-  }
-
-  initForm() {
+  constructor(private fb: FormBuilder, private messageService: MessageService) {
     this.contractForm = this.fb.group({
       locatario: ['', Validators.required],
       propiedad: ['', Validators.required],
-      tipo: ['Alquiler', Validators.required],
+      tipo: [null, Validators.required],
       fechaInicio: [null, Validators.required],
       fechaVencimiento: [null, Validators.required],
-      monto: [null, [Validators.required, Validators.min(1)]],
-      // Agregamos los controles al formulario
-      frecuenciaAumento: ['6 Meses', Validators.required],
-      tipoAumento: ['ICL', Validators.required]
+      monto: [null, Validators.required],
+      frecuenciaAumento: [null, Validators.required],
+      tipoAumento: [null, Validators.required]
     });
   }
 
-  getSeverity(fecha: any): "success" | "warn" | "danger" | "info" {
-    if (!fecha) return 'info';
-    const hoy = new Date();
-    const vencimiento = new Date(fecha); // Aseguramos que sea objeto Date
-    const diffDays = Math.ceil((vencimiento.getTime() - hoy.getTime()) / (1000 * 60 * 60 * 24));
-
-    if (diffDays <= 0) return 'danger';
-    if (diffDays <= 60) return 'warn';
-    return 'success';
-  }
-
-  getStatusLabel(fecha: any): string {
-    const severity = this.getSeverity(fecha);
-    if (severity === 'danger') return 'VENCIDO';
-    if (severity === 'warn') return 'PRÓXIMO';
-    return 'VIGENTE';
-  }
-
-  viewLegajo(contract: Contract) {
-    this.selectedContract = contract;
-    this.docPreview = null;
+  ngOnInit(): void {
+    // MOCK DATA: Datos de prueba iniciales
+    this.contracts = [
+      {
+        id: 1,
+        locatario: 'Mariano Martínez',
+        propiedad: 'Depto 4B - Av. Libertador',
+        tipo: 'Vivienda',
+        fechaInicio: new Date(2024, 2, 10),
+        fechaVencimiento: new Date(2026, 2, 10), // Próximo a vencer (ejemplo)
+        monto: 500000,
+        frecuenciaAumento: 'Trimestral',
+        tipoAumento: 'IPC',
+        estado: 'VIGENTE',
+        documentos: [
+          { nombre: 'Contrato_Firmado.pdf', tipo: 'PDF' },
+          { nombre: 'DNI_Titular.jpg', tipo: 'IMG' }
+        ],
+        historialAumentos: [
+          { fecha: new Date(2024, 2, 10), monto: 350000 },
+          { fecha: new Date(2024, 5, 10), monto: 420000 },
+          { fecha: new Date(2024, 8, 10), monto: 500000 }
+        ]
+      },
+      {
+        id: 2,
+        locatario: 'Sofía Gala',
+        propiedad: 'Local 5 - Galería Central',
+        tipo: 'Comercial',
+        fechaInicio: new Date(2023, 0, 1),
+        fechaVencimiento: new Date(2025, 0, 1), // Vencido (ejemplo)
+        monto: 280000,
+        frecuenciaAumento: 'Semestral',
+        tipoAumento: 'ICL',
+        estado: 'VENCIDO',
+        documentos: [],
+        historialAumentos: []
+      }
+    ];
   }
 
   saveContract() {
-    if (this.contractForm.valid) {
-      const nuevo = {
-        id: Date.now(),
-        ...this.contractForm.value,
-        documentos: [],
-        historialAumentos: []
-      };
-      this.contracts = [...this.contracts, nuevo];
-      this.messageService.add({ severity: 'success', summary: 'Guardado', detail: 'Contrato registrado' });
-      this.contractForm.reset({
-        tipo: 'Alquiler',
-        frecuenciaAumento: '6 Meses',
-        tipoAumento: 'ICL'
-      });
+    if (this.contractForm.invalid) {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Complete todos los campos obligatorios' });
+      return;
     }
+
+    const val = this.contractForm.value;
+
+    const newContract: Contract = {
+      id: Math.floor(Math.random() * 10000),
+      locatario: val.locatario,
+      propiedad: val.propiedad,
+      tipo: val.tipo, // Si usás optionValue='value' en el HTML, esto guarda el string directo
+      fechaInicio: val.fechaInicio,
+      fechaVencimiento: val.fechaVencimiento,
+      monto: val.monto,
+      frecuenciaAumento: val.frecuenciaAumento,
+      tipoAumento: val.tipoAumento,
+      estado: 'VIGENTE',
+      documentos: [],
+      historialAumentos: [
+        { fecha: new Date(), monto: val.monto } // Primer registro histórico
+      ]
+    };
+
+    // Actualizamos la tabla forzando una nueva referencia del array
+    this.contracts = [newContract, ...this.contracts];
+
+    this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Contrato guardado correctamente' });
+    this.contractForm.reset();
   }
 
-  uploadFiles(event: any) {
-    if (!this.selectedContract) return;
-    for (let file of event.files) {
-      const fileUrl = URL.createObjectURL(file);
-      this.selectedContract.documentos.push({
-        nombre: file.name,
-        url: fileUrl,
-        tipo: file.type.includes('pdf') ? 'PDF' : 'IMG' as any
-      });
-    }
-    this.messageService.add({ severity: 'success', summary: 'Subida Exitosa', detail: 'Documentos agregados' });
-    event.originalEvent.target.value = '';
+  // --- LÓGICA DE SEMÁFORO (Vencimientos) ---
+
+  getSeverity(fechaVencimiento: Date): "success" | "warning" | "danger" | "info" | undefined {
+    const dias = this.getDiasRestantes(fechaVencimiento);
+
+    if (dias < 0) return 'danger';      // Vencido (Rojo)
+    if (dias <= 60) return 'warning';   // Próximo (Naranja)
+    return 'success';                   // Vigente (Verde)
   }
 
-  deleteDoc(doc: any) {
-    if (!this.selectedContract) return;
-    this.selectedContract.documentos = this.selectedContract.documentos.filter(d => d !== doc);
-    this.docPreview = null;
-    this.messageService.add({ severity: 'info', summary: 'Eliminado', detail: 'Documento quitado' });
+  getStatusLabel(fechaVencimiento: Date): string {
+    const dias = this.getDiasRestantes(fechaVencimiento);
+
+    if (dias < 0) return 'VENCIDO';
+    if (dias <= 60) return 'PRÓXIMO';
+    return 'VIGENTE';
+  }
+
+  private getDiasRestantes(fecha: Date): number {
+    const hoy = new Date();
+    const vencimiento = new Date(fecha);
+    const diffTime = vencimiento.getTime() - hoy.getTime();
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  }
+
+  // --- LÓGICA DE LEGAJO DIGITAL ---
+
+  viewLegajo(contract: Contract) {
+    this.selectedContract = contract;
+    // Scrollear hacia abajo suavemente para ver el legajo abierto
+    setTimeout(() => {
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }, 100);
   }
 
   openDoc(doc: any) {
-    this.docPreview = this.sanitizer.bypassSecurityTrustResourceUrl(doc.url);
-    this.docType = doc.tipo;
+    console.log('Abriendo documento:', doc.nombre);
+    // Acá iría la lógica para descargar o abrir el PDF real
   }
 
-  closePreview() {
-    this.docPreview = null;
+  deleteDoc(doc: any) {
+    if (this.selectedContract) {
+      this.selectedContract.documentos = this.selectedContract.documentos.filter(d => d !== doc);
+      this.messageService.add({ severity: 'info', summary: 'Eliminado', detail: 'Documento quitado del legajo' });
+    }
   }
 }
