@@ -6,7 +6,6 @@
     </div>
 
     <form [formGroup]="contractForm" (ngSubmit)="saveContract()">
-
         <div class="flex flex-column md:flex-row align-items-stretch md:align-items-center gap-3 mb-3">
             <label class="font-semibold text-lg text-900 md:w-11rem" style="min-width: 110px;">Locatario</label>
             <div class="flex-1">
@@ -76,7 +75,6 @@
             <button pButton type="submit" label="Guardar Contrato" class="p-button-primary w-full md:w-auto px-4"
                 [disabled]="contractForm.invalid"></button>
         </div>
-
     </form>
 </div>
 
