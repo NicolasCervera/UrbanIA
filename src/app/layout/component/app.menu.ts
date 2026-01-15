@@ -32,7 +32,8 @@ export class AppMenu {
                     { label: 'Propiedades', icon: 'pi pi-fw pi-home', routerLink: ['/propiedades'] },
                     { label: 'Clientes', icon: 'pi pi-fw pi-users', routerLink: ['/clientes'] },
                     { label: 'Contratos', icon: 'pi pi-fw pi-file', routerLink: ['/contratos'] },
-                    { label: 'Pagos', icon: 'pi pi-fw pi-dollar', routerLink: ['/pagos'] }
+                    { label: 'Pagos', icon: 'pi pi-fw pi-dollar', routerLink: ['/pagos'] },
+                    { label: 'Tasaciones', icon: 'pi pi-fw pi-home', routerLink: ['/tasaciones'] }
                 ]
             }
         ];

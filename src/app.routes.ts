@@ -8,6 +8,9 @@ import { PropertiesCrudComponent } from '@/pages/properties-crud/properties-crud
 import { ClientsCrudComponent } from '@/pages/clients-crud/clients-crud';
 import { ContractsCrudComponent } from '@/pages/contracts-crud/contracts-crud';
 import { PaymentsCrud } from '@/pages/payments-crud/payments-crud';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common'; // <--- ESTE ES EL IMPORTANTE
+import { ValuationsCrudComponent } from './app/pages/valuations-crud/valuations-crud';
 
 export const appRoutes: Routes = [
     {
@@ -21,6 +24,7 @@ export const appRoutes: Routes = [
             { path: 'clientes', component: ClientsCrudComponent },
             { path: 'contratos', component: ContractsCrudComponent },
             { path: 'pagos', component: PaymentsCrud },
+            { path: 'tasaciones', component: ValuationsCrudComponent },
             { path: 'pages', loadChildren: () => import('./app/pages/pages.routes') }
         ]
     },
