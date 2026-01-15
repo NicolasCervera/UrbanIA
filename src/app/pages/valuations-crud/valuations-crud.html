@@ -1,0 +1,176 @@
+<p-toast></p-toast>
+
+<div class="card p-5 shadow-2 border-round-xl">
+    <div class="mb-5 border-bottom-1 surface-border pb-3">
+        <h5 class="text-2xl font-bold m-0 text-900">Gestión de Tasaciónes</h5>
+    </div>
+
+    <form [formGroup]="valuationForm" (ngSubmit)="saveValuation()">
+
+        <div class="flex flex-column md:flex-row align-items-stretch md:align-items-center gap-3 mb-3">
+            <label class="font-semibold text-lg text-900 md:w-11rem" style="min-width: 110px;">Propiedad</label>
+            <div class="flex-1">
+                <input pInputText formControlName="propiedad" class="w-full" placeholder="Ej: Depto 4B - Torre 1" />
+            </div>
+        </div>
+
+        <div class="flex flex-column md:flex-row align-items-stretch md:align-items-center gap-3 mb-3">
+            <label class="font-semibold text-lg text-900 md:w-11rem" style="min-width: 110px;">Tasador</label>
+            <div class="flex-1">
+                <input pInputText formControlName="tasador" class="w-full" placeholder="Empresa o Profesional" />
+            </div>
+        </div>
+
+        <div class="flex flex-column md:flex-row align-items-stretch md:align-items-center gap-3 mb-3">
+            <label class="font-semibold text-lg text-900 md:w-11rem" style="min-width: 110px;">Estado</label>
+            <div class="flex-1">
+                <p-select [options]="estados" formControlName="estado" placeholder="Seleccionar estado"
+                    styleClass="w-full" [style]="{'width':'100%'}"></p-select>
+            </div>
+        </div>
+
+        <div class="flex flex-column md:flex-row align-items-stretch md:align-items-center gap-3 mb-3">
+            <label class="font-semibold text-lg text-900 md:w-11rem" style="min-width: 110px;">Fecha Valuación</label>
+            <div class="flex-1">
+                <p-datepicker formControlName="fechaTasacion" dateFormat="dd/mm/yy" [showIcon]="true"
+                    styleClass="w-full" [inputStyle]="{'width':'100%'}"></p-datepicker>
+            </div>
+        </div>
+
+        <div class="flex flex-column md:flex-row align-items-stretch md:align-items-center gap-3 mb-4">
+            <label class="font-semibold text-lg text-900 md:w-11rem" style="min-width: 110px;">Valor Mercado</label>
+            <div class="flex-1">
+                <p-inputNumber formControlName="valorMercado" mode="currency" currency="USD" locale="en-US"
+                    styleClass="w-full" placeholder="USD 0.00" [inputStyle]="{'width':'100%'}"></p-inputNumber>
+            </div>
+        </div>
+
+        <div class="flex flex-column-reverse md:flex-row justify-content-end align-items-center gap-3 mt-5">
+            <button pButton type="button" label="Limpiar"
+                class="p-button-outlined p-button-secondary w-full md:w-auto px-4"
+                (click)="valuationForm.reset()"></button>
+            <button pButton type="submit" label="Guardar Tasación" class="p-button-primary w-full md:w-auto px-4"
+                [disabled]="valuationForm.invalid"></button>
+        </div>
+
+    </form>
+</div>
+
+<div class="card p-4 mt-4 shadow-2 border-round-xl">
+
+    <div class="flex flex-column md:flex-row justify-content-between align-items-center mb-4 gap-3">
+        <h5 class="text-2xl font-bold m-0 text-900 w-full md:w-auto text-left">Historial de Tasaciones</h5>
+
+        <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+            placeholder="Buscar propiedad, tasador..." class="w-full md:w-20rem" />
+    </div>
+
+    <p-table #dt [value]="valuations" [rows]="10" [paginator]="true"
+        [globalFilterFields]="['propiedad', 'tasador', 'estado']" responsiveLayout="scroll"
+        styleClass="p-datatable-gridlines">
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 10%">Estado</th>
+                <th style="width: 25%">Propiedad</th>
+                <th style="width: 20%">Tasador</th>
+                <th style="width: 10%">Fecha</th>
+                <th style="width: 15%">Valor Mercado</th>
+                <th style="width: 10%" class="text-center">Tendencia</th>
+                <th style="width: 10%" class="text-center">Detalle</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-val>
+            <tr>
+                <td>
+                    <p-tag [severity]="getSeverity(val.estado)" [value]="val.estado"></p-tag>
+                </td>
+                <td class="font-bold">{{val.propiedad}}</td>
+                <td>{{val.tasador}}</td>
+                <td>{{val.fechaTasacion | date:'dd/MM/yyyy'}}</td>
+                <td class="font-bold text-900">
+                    {{val.valorMercado | currency:'USD'}}
+                </td>
+                <td class="text-center">
+                    <i class="pi {{getTrend(val).icon}} {{getTrend(val).color}} font-bold"
+                        style="font-size: 1.2rem;"></i>
+                </td>
+                <td class="text-center">
+                    <button pButton icon="pi pi-chart-line" class="p-button-rounded p-button-info p-button-text"
+                        (click)="viewDetail(val)" pTooltip="Ver Informe"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="7" class="text-center p-4">No hay tasaciones registradas.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<div *ngIf="selectedValuation"
+    class="card mt-4 p-5 shadow-2 border-round-xl animate-fadein surface-section border-left-3 border-indigo-500">
+
+    <div class="flex justify-content-between align-items-center mb-5 border-bottom-1 surface-border pb-3">
+        <div>
+            <span class="text-500 block text-sm font-semibold uppercase">Informe de Valoración</span>
+            <h2 class="text-3xl font-bold m-0 text-900 text-left">{{selectedValuation.propiedad}}</h2>
+        </div>
+        <button pButton icon="pi pi-times" class="p-button-rounded p-button-text p-button-secondary"
+            (click)="selectedValuation = null"></button>
+    </div>
+
+    <div class="grid w-full m-0">
+
+        <div class="col-12 md:col-6 p-0 pr-0 md:pr-4 md:border-right-1 surface-border mb-4 md:mb-0">
+            <h3 class="text-xl font-bold mb-3 text-900 text-left">Evolución de Valor</h3>
+
+            <p-timeline [value]="selectedValuation.historial" align="left" styleClass="w-full">
+                <ng-template pTemplate="content" let-event>
+                    <small class="text-500 block mb-1 text-left">{{event.fecha | date:'MM/yyyy'}}</small>
+                    <div class="font-bold text-lg text-primary text-left">{{event.valor | currency:'USD'}}</div>
+                    <span class="text-sm text-600 block mt-1">{{event.observacion}}</span>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <div class="text-left text-500">Sin historial previo.</div>
+                </ng-template>
+            </p-timeline>
+        </div>
+
+        <div class="col-12 md:col-6 p-0 md:pl-4">
+            <h3 class="text-xl font-bold mb-3 text-900 text-left">Documentación Técnica</h3>
+
+            <div class="w-full text-left">
+                <div class="mb-3 text-left">
+                    <p-fileUpload name="docs[]" [multiple]="true" accept="image/*,application/pdf" maxFileSize="5000000"
+                        mode="basic" chooseLabel="Subir Informe/Fotos" uploadLabel="Guardar" styleClass="w-full">
+                    </p-fileUpload>
+                </div>
+
+                <div class="surface-ground p-4 border-round" *ngIf="!selectedValuation.documentos.length">
+                    <p class="m-0 text-500 text-left">No hay informes cargados.</p>
+                </div>
+
+                <ul class="list-none p-0 m-0 w-full" *ngIf="selectedValuation.documentos.length > 0">
+                    <li *ngFor="let doc of selectedValuation.documentos"
+                        class="flex align-items-center justify-content-between p-3 mb-2 border-1 surface-border border-round cursor-pointer hover:surface-100"
+                        (click)="openDoc(doc)">
+
+                        <div class="flex align-items-center gap-3">
+                            <i class="pi"
+                                [ngClass]="{'pi-file-pdf text-red-500': doc.tipo === 'PDF', 'pi-image text-blue-500': doc.tipo === 'IMG'}"></i>
+                            <span class="text-900">{{doc.nombre}}</span>
+                        </div>
+
+                        <button pButton icon="pi pi-trash"
+                            class="p-button-rounded p-button-text p-button-danger p-button-sm"
+                            (click)="deleteDoc(doc); $event.stopPropagation()"></button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
