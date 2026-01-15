@@ -29,11 +29,11 @@ export class AppMenu {
             {
                 label: 'Gestión',
                 items: [
-                    { label: 'Propiedades', icon: 'pi pi-fw pi-home', routerLink: ['/propiedades'] },
-                    { label: 'Clientes', icon: 'pi pi-fw pi-users', routerLink: ['/clientes'] },
-                    { label: 'Contratos', icon: 'pi pi-fw pi-file', routerLink: ['/contratos'] },
-                    { label: 'Pagos', icon: 'pi pi-fw pi-dollar', routerLink: ['/pagos'] },
-                    { label: 'Tasaciones', icon: 'pi pi-fw pi-home', routerLink: ['/tasaciones'] }
+                    { label: 'Propiedades', icon: 'pi pi-fw pi-home', routerLink: ['/app/propiedades'] },
+                    { label: 'Clientes', icon: 'pi pi-fw pi-users', routerLink: ['/app/clientes'] },
+                    { label: 'Contratos', icon: 'pi pi-fw pi-file', routerLink: ['/app/contratos'] },
+                    { label: 'Pagos', icon: 'pi pi-fw pi-dollar', routerLink: ['/app/pagos'] },
+                    { label: 'Tasaciones', icon: 'pi pi-fw pi-home', routerLink: ['/app/tasaciones'] }
                 ]
             }
         ];
